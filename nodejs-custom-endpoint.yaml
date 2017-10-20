@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: custom-service
+subsets:
+- addresses:
+  - ip: 10.10.12.245
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP

@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: multi-deploy
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: web-deploy
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+        - name: mysql
+          image: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: password

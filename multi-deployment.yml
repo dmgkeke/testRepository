@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wp-service
+  labels:
+    app: wordpress
+spec:
+  ports:
+    - port: 443
+      name: https
+  selector:
+    app: wordpress
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: wp-ingress
+spec:
+  backend:
+    serviceName: wp-service
+    servicePort: 80
