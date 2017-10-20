@@ -1,0 +1,23 @@
+apt-get update
+
+curl -sSL https://get.docker.com/ | sh
+
+systemctl start docker
+
+===cAdvisor=================================
+docker run \
+   --detach=true \
+   --volume=/:/rootfs:ro \
+   --volume=/var/run:/var/run:rw \
+   --volume=/sys:/sys:ro \
+   --volume=/var/lib/docker/:/var/lib/docker:ro \
+   --publish=8080:8080 \
+   --privileged=true \
+   --name=cadvisor \
+google/cadvisor:latest
+
+===Compose=========
+
+curl -L https://github.com/docker/compose/releases/download/1.15.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+
+chmod +x /usr/local/bin/docker-compose

@@ -1,0 +1,5 @@
+rm -rfv /var/lib/apt/lists/*
+
+sed -i 's/ftp.daum.net/kr.archive.ubuntu.com/g' /etc/apt/sources.list
+
+apt-get update 

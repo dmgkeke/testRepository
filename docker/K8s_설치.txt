@@ -1,0 +1,56 @@
+==Docker v 1.12 설치=================================
+apt-get update
+
+apt-get install apt-transport-https ca-certificates
+
+apt-key adv \
+               --keyserver hkp://ha.pool.sks-keyservers.net:80 \
+               --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+
+echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
+
+apt-get update
+
+apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
+
+apt-get install -y docker-engine=1.12.0-0~xenial
+
+==Kubernetes 설치==========================================
+==모든 노드에서
+apt-get update 
+
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+
+cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
+deb http://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+
+apt-get update
+
+apt-get install -y kubelet kubeadm kubernetes-cni
+
+==마스터에서
+kubeadm init
+
+mkdir -p $HOME/.kube
+
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+
+chown $(id -u):$(id -g) $HOME/.kube/config
+
+export kubever=$(kubectl version | base64 | tr -d '\n')
+
+kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
+
+kubectl get pods --all-namespaces 명령 결과 모든 요소의 설치가 완료될때까지 기다린다.
+
+==노드에서
+마스터의 kube init 결과로 나온 토큰 조인 구문을 실행한다.
+
+==문제 발생시
+kubeadm reset
+/etc/systemd/system/kubelet.service.d/10-kubeadm.conf 파일에 다음을 추가
+Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=false"
+
+systemctl daemon-reload
+systemctl restart kubelet
